@@ -25,5 +25,5 @@ class StudentView(View):
         roll_no = data.get('roll_no')
         student = Student(id = id, name = name, roll_no = roll_no)
         student.save()
-        return JsonResponse(data = {},status = 200)
+        return JsonResponse(data = {'response': "Successfully added new student"},status = 201)
 
