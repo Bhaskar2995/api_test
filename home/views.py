@@ -18,12 +18,36 @@ class StudentView(View):
 
     def post(self,request,*args, **kwargs):
         data = json.loads(request.body)
+        
         id = data.get('id')
-        print(id)
         name = data.get('name')
-        print(name)
         roll_no = data.get('roll_no')
-        student = Student(id = id, name = name, roll_no = roll_no)
-        student.save()
-        return JsonResponse(data = {'response': "Successfully added new student"},status = 201)
+       
+        if not id or not name or not roll_no:
+            message = "Missing Details"
+            return JsonResponse(data = {'response':message},status = 400)
+        
+        if type(id) != int:
+            message = "id should be an integer"
+            return JsonResponse(data = {'response':message},status = 400)
+        
+        if type(name) != str:
+            message = "name should be string"
+            return JsonResponse(data = {'response':message},status = 400)
+        
+        if type(roll_no) != int:
+            message = "id should be an integer"
+            return JsonResponse(data = {'response':message},status = 400)
+        
+        
+        try:
+            student = Student.objects.get(id = id)
+            print(student.name)
+            message = "A student already exists for this id. The student's name is: %s" %student.name
+            return JsonResponse(data = {'response': message})
+        except:
+            student = Student(id = id, name = name, roll_no = roll_no)
+            student.save()
+            return JsonResponse(data = {'response': "Successfully added new student"},status = 201)
+
 
